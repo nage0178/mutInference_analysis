@@ -1,0 +1,6 @@
+*gff
+*vcf.gz
+*vcf.gz.tbi
+empirial/msa/
+empirical/vcf_small/
+empirical/ref
