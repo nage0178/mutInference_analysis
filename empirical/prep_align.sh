@@ -46,7 +46,7 @@ done
 for i in 1 2 3 4 5 6 7 8 9 10
 do
 	j=1
-	for coords in $(cat ../coords${i}.txt) 
+	for coords in $(cat coords${i}.txt) 
 	do
 		seqNum=$(grep ">" msa/msa_chr${i}_${j}_align.fa | wc -l )
 
