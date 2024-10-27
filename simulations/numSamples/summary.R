@@ -21,10 +21,10 @@ coverage[1,2] <- length( which((sum_10$time_25 < sum_10$time) * (sum_10$time_975
 coverage[2,2] <- length( which((sum_100$time_25 < sum_100$time) * (sum_100$time_975 > sum_100$time) == 1)) / dim(sum_100)[1]
 coverage[3,2] <- length( which((sum_200$time_25 < sum_200$time) * (sum_200$time_975 > sum_200$time) == 1)) / dim(sum_200)[1]
 
-{
-  pdf("~/mutationSim/figs/numSamples_SumStat.pdf", width = 6, height = 7)
-  par(mfrow = c(3, 2))
-  par(mar = c(4, 5, 1.5, .5), xaxs='i', yaxs='i')
+# {
+#   pdf("~/mutationSim/figs/numSamples_SumStat.pdf", width = 6, height = 7)
+#   par(mfrow = c(3, 2))
+#   par(mar = c(4, 5, 1.5, .5), xaxs='i', yaxs='i')
   plot(coverage, ylab = "coverage (time)", xaxt='n',  xlab = "", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i") 
   #Axis(x=c(0,15000), at = c(0, 1000, 5000, 10000, 15000), side=1, labels = c(0, 1000, 5000, 10000, expression(infinity)))
   mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
@@ -48,9 +48,10 @@ RMSE[1,2] <- (mean((sum_10$time - sum_10$mean_time)^2))^(1/2) / (.5 * 10 ^ -9)
 RMSE[2,2] <- (mean((sum_100$time - sum_100$mean_time)^2))^(1/2)/ (.5 * 10 ^ -9)
 RMSE[3,2] <- (mean((sum_200$time - sum_200$mean_time)^2))^(1/2) / (.5 * 10 ^ -9)
 
-plot(RMSE,  ylab = "RMSE", xaxt='n', xlab = "", pch = 16, ylim = c(0, 350000), xlim = c(0, 210), yaxs="i", xaxs = "i", yaxt='n',)
+plot(RMSE,  ylab = "RMSE", xaxt='n', xlab = "samples", pch = 16, ylim = c(0, 350000), xlim = c(0, 210), yaxs="i", xaxs = "i", yaxt='n',type = "b")
 Axis(x=c(0,350000), at = c(100000, 200000, 300000), side=2, labels = c(100000, 200000, 300000))
-mtext("c", side = 3, line = -.5, adj = -.25, font = 2)
+Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c(10, 100, 200))
+mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
 
 # Credible intervals
 CI_size <- matrix(c(10, 100, 200, 0, 0, 0), byrow = FALSE, nrow = 3)
@@ -87,7 +88,68 @@ power_mut[3, 2] <- mean(apply(sum_200[ , 16:19], 1, max))
 plot(power_mut, xaxt='n',  xlab = "samples", ylab = "HP mutation probability", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i")
 Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c( 10, 100, 200))
 mtext("f", side = 3, line = -.5, adj = -.25, font = 2)
-dev.off()}
+#dev.off()}
+
+df <- cbind(coverage, bias[,2], CI_size[, 2], power_mut[,2], power_pop[,2])
+df <- as.data.frame(df)
+colnames(df) <- c("samples", "cov", "bias", "CI", "mut", "pop")
+library(tidyverse)
+library(ggbreak) 
+library(patchwork)
+my_df <- df %>% select(samples, cov, mut, pop) %>% 
+  gather(key = "variable", value = "probability", -samples)
+p1 <- ggplot(my_df, aes(x = samples, y = probability) ) +
+  labs(color = "", linetype ="", ) +
+  scale_color_discrete(labels = c("coverage", "HP mutation", "HP population")) +
+  scale_linetype_discrete(labels = c("coverage", "HP mutation", "HP population")) +
+  scale_x_continuous( breaks = c(0, 10, 100, 200), labels =c(0, 100, 100, 200), position = "bottom" ) +
+  geom_line(aes(color = variable, linetype = variable)) + geom_point(aes(col = variable)) +
+  scale_y_continuous(limits = c(0,1)) + 
+  theme_classic() + 
+  theme(legend.position = "bottom")
+
+
+df <- cbind(coverage, bias[,2], CI_size[, 2], power_mut[,2], power_pop[,2])
+df <- as.data.frame(df)
+colnames(df) <- c("samples", "cov", "bias", "CI", "mut", "pop")
+df$bias <- df$bias / 1000
+df$CI <- df$CI / 1000
+ylim.prim <- c(0, 1.1 * 10 ^ 6 / 1000)   # in this example, precipitation
+ylim.sec <- c(-20000 / 1000, 0)    # in this example, temperature
+
+b <- diff(ylim.prim)/diff(ylim.sec)
+a <- ylim.prim[1] - b*ylim.sec[1]
+df <- cbind(df, (bias - a)/ b) 
+colnames(df)[3] <- "original_bias"
+colnames(df)[8] <- "bias"
+
+my_df2 <- df %>% select(samples, CI, bias) %>% 
+  gather(key = "variable", value = `credible interval size`, -samples)
+
+p2 <- ggplot(my_df2, aes(x = samples, y = `credible interval size`)) +
+  geom_line(aes(color = variable, linetype = variable)) + geom_point(aes(col = variable)) +
+  labs(color = "", linetype ="", ) +
+  scale_y_continuous( sec.axis = sec_axis(~ (. - a)/b, name = "bias")) + 
+  scale_x_continuous( breaks = c(0, 10, 100, 200), labels =c(0, 10, 100, 200), position = "bottom") + 
+  theme_classic() + #scale_x_break(c(12000, 13000),) +
+  theme(legend.position = "bottom") 
+
+pdf.options(reset = TRUE, onefile = FALSE)
+library(grid)
+library(gridExtra)
+
+pdf("~/mutationSim/figs/samples_SumStat_c.pdf", width = 4, height = 3)
+p1 
+dev.off()
+pdf("~/mutationSim/figs/samples_SumStat_d.pdf", width = 4, height = 3)
+p2
+dev.off()
+figure <- ggarrange(p1, p1, p2, p2, labels = c("a", "b" ),
+                    nrow =2, ncol = 2)
+
+ggarrange(p1, labels = c("a" ),
+          nrow =1, ncol = 1)
+figure
 
 ##### Coverage
 
