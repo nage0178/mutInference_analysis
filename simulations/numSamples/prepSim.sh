@@ -4,7 +4,7 @@
 
 reps=30
 length=5000 # This has to be equal to the simulated length
-seed=10000
+seed=10001
 Rseed=1
 minCount=250
 sample=1000
@@ -139,12 +139,14 @@ do
 	# simulate non-focal loci
 	sed "s/seed = 1/seed = ${seed}/g" ../simulateNonFocal.ctl > simulateNonFocal.ctl
 	~/bpp/src/bpp --simulate simulateNonFocal.ctl &> simOut
+	((seed=seed+1))
 
-	rm -f seq_${numSample}.txt
 
 	# Prepare alignments with different sequence lengths
 	for numSample in 10 100 200 
 	do
+		rm -f seq_${numSample}.txt
+
 		for focal in {1..10}
 		do
 			checkPoly=1

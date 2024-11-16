@@ -36,6 +36,7 @@ nsample = 500000
 threads = 16
 printlocus = 10 1 2 3 4 5 6 7 8 9 10
 
+checkpoint = 800000 800000
 migprior = 1.5 3
 migration = 8
 A B 

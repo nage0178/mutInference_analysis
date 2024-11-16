@@ -61,8 +61,8 @@ do
 		((charSecond=site-1))
 		
 		# Reorder whole alignment so that the first polymorphic site is first in the alignment
-		awk '{{for(i=2;i<=NF;i++){printf("%s", $i)}}; printf("\n")}' simulate_IM_${focal}.txt | awk -v  i=$site -v j=$charFirst '{ print substr( $0, i, j ) }' | sed 's/\t//g'> beginAlign
-		awk '{{for(i=2;i<=NF;i++){printf("%s", $i)}}; printf("\n")}' simulate_IM_${focal}.txt | awk -v  i=$charSecond  '{ print substr( $0, 1, i ) }' > endAlign
+		awk '{{for(i=2;i<=NF;i++){printf("%s", $i)}}; printf("\n")}' simulate_IM_${focal}.txt | awk -v  i=$site -v j=$charFirst '{if (NR < 5) {print $1 $2} else { print substr( $0, i, j ) }}' | sed 's/\t//g'> beginAlign
+                awk '{{for(i=2;i<=NF;i++){printf("%s", $i)}}; printf("\n")}' simulate_IM_${focal}.txt | awk -v  i=$charSecond  '{if (NR < 5){printf "\n"} else { print substr( $0, 1, i ) }}' > endAlign
 		paste <(cut -f1 -d " " simulate_IM_${focal}.txt) <(cut -f 1 beginAlign)  > 10000_align_${focal}.txt 
 		paste -d "" <(cut -f 1,2 10000_align_${focal}.txt) <(cut -f 1 endAlign) > 10000_${focal}.txt 
 
