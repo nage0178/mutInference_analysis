@@ -5,7 +5,7 @@ library(ggpubr)
 library(cowplot)
 times <- read.csv("~/mutInference_analysis/empirical/sat_1/summary", header = TRUE)
 
-mu_rate <- .5 * 10 ^-9
+mu_rate <-  10 ^-9
 
 root_L_HPD <- 0.000434213700  / mu_rate
 internal_L_HPD <- 0.000022696500 / mu_rate

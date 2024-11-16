@@ -25,43 +25,44 @@ coverage[3,2] <- length( which((sum_200$time_25 < sum_200$time) * (sum_200$time_
 #   pdf("~/mutationSim/figs/numSamples_SumStat.pdf", width = 6, height = 7)
 #   par(mfrow = c(3, 2))
 #   par(mar = c(4, 5, 1.5, .5), xaxs='i', yaxs='i')
-  plot(coverage, ylab = "coverage (time)", xaxt='n',  xlab = "", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i") 
-  #Axis(x=c(0,15000), at = c(0, 1000, 5000, 10000, 15000), side=1, labels = c(0, 1000, 5000, 10000, expression(infinity)))
-  mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
+  # plot(coverage, ylab = "coverage (time)", xaxt='n',  xlab = "", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i") 
+  # #Axis(x=c(0,15000), at = c(0, 1000, 5000, 10000, 15000), side=1, labels = c(0, 1000, 5000, 10000, expression(infinity)))
+  # mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
 
 # Bias
 #bias <- matrix(c(1000, 5000, 10000, Inf, 0, 0, 0, 0), byrow = FALSE, nrow = 4)
 bias <- matrix(c(10, 100, 200, 0, 0, 0), byrow = FALSE, nrow = 3)
 
-bias[1,2] <- mean(sum_10$mean_time - sum_10$time) / (.5 * 10 ^ -9)
-bias[2,2] <- mean(sum_100$mean_time - sum_100$time)/ (.5 * 10 ^ -9)
-bias[3,2] <- mean(sum_200$mean_time - sum_200$time) / (.5 * 10 ^ -9)
+mu_rate <- 10 ^ -9
+bias[1,2] <- mean(sum_10$mean_time - sum_10$time) /mu_rate
+bias[2,2] <- mean(sum_100$mean_time - sum_100$time)/ mu_rate
+bias[3,2] <- mean(sum_200$mean_time - sum_200$time) / mu_rate
 
-plot(bias,  ylab = "bias", xaxt='n',  xlab = "", pch = 16, ylim =c(-17000,8000),  xlim = c(0, 210), yaxs="i", xaxs = "i") 
-#Axis(x=c(-17000,8000), at = c(-20000, -10000, 0 , 10000), side=2, labels = c(-20000, -10000,  0 , 10000))
-mtext("b", side = 3, line = -.5, adj = -.25, font = 2)
+# plot(bias,  ylab = "bias", xaxt='n',  xlab = "", pch = 16, ylim =c(-17000,8000),  xlim = c(0, 210), yaxs="i", xaxs = "i") 
+# #Axis(x=c(-17000,8000), at = c(-20000, -10000, 0 , 10000), side=2, labels = c(-20000, -10000,  0 , 10000))
+# mtext("b", side = 3, line = -.5, adj = -.25, font = 2)
 
 
 # Root mean square error
 RMSE <- matrix(c(10, 100, 200, 0, 0, 0), byrow = FALSE, nrow = 3)
-RMSE[1,2] <- (mean((sum_10$time - sum_10$mean_time)^2))^(1/2) / (.5 * 10 ^ -9)
-RMSE[2,2] <- (mean((sum_100$time - sum_100$mean_time)^2))^(1/2)/ (.5 * 10 ^ -9)
-RMSE[3,2] <- (mean((sum_200$time - sum_200$mean_time)^2))^(1/2) / (.5 * 10 ^ -9)
+RMSE[1,2] <- (mean((sum_10$time - sum_10$mean_time)^2))^(1/2) / mu_rate
+RMSE[2,2] <- (mean((sum_100$time - sum_100$mean_time)^2))^(1/2)/ mu_rate
+RMSE[3,2] <- (mean((sum_200$time - sum_200$mean_time)^2))^(1/2) / mu_rate
 
-plot(RMSE,  ylab = "RMSE", xaxt='n', xlab = "samples", pch = 16, ylim = c(0, 350000), xlim = c(0, 210), yaxs="i", xaxs = "i", yaxt='n',type = "b")
-Axis(x=c(0,350000), at = c(100000, 200000, 300000), side=2, labels = c(100000, 200000, 300000))
-Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c(10, 100, 200))
-mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
+# plot(RMSE,  ylab = "RMSE", xaxt='n', xlab = "samples", pch = 16, ylim = c(0, 350000), xlim = c(0, 210), yaxs="i", xaxs = "i", yaxt='n',type = "b")
+# Axis(x=c(0,350000), at = c(100000, 200000, 300000), side=2, labels = c(100000, 200000, 300000))
+# Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c(10, 100, 200))
+# mtext("a", side = 3, line = -.5, adj = -.25, font = 2)
 
 # Credible intervals
 CI_size <- matrix(c(10, 100, 200, 0, 0, 0), byrow = FALSE, nrow = 3)
-CI_size[1,2] <- mean(sum_10$time_975 - sum_10$time_25)/ (.5 * 10 ^ -9)
-CI_size[2,2] <- mean(sum_100$time_975 - sum_100$time_25)/ (.5 * 10 ^ -9)
-CI_size[3,2] <- mean(sum_200$time_975 - sum_200$time_25)/ (.5 * 10 ^ -9)
+CI_size[1,2] <- mean(sum_10$time_975 - sum_10$time_25)/ mu_rate
+CI_size[2,2] <- mean(sum_100$time_975 - sum_100$time_25)/ mu_rate
+CI_size[3,2] <- mean(sum_200$time_975 - sum_200$time_25)/ mu_rate
 
-plot(CI_size,  ylab = "size of credible interval", pch = 16, xlim = c(0, 210), ylim = c(0, 1.2 * 10^6), yaxs="i", xaxs = "i", xaxt='n', xlab = "")
-#Axis(x=c(0,10^6), at = c(2.5 * 10^5, 5 * 10^5, 7.5 * 10^5, 10* 10^5), side=2, labels = c(2.5 * 10^5,5 * 10^5, 7.5 * 10^5, 10 * 10^5))
-mtext("d", side = 3, line = -.5, adj = -.25, font = 2)
+# plot(CI_size,  ylab = "size of credible interval", pch = 16, xlim = c(0, 210), ylim = c(0, 1.2 * 10^6), yaxs="i", xaxs = "i", xaxt='n', xlab = "")
+# #Axis(x=c(0,10^6), at = c(2.5 * 10^5, 5 * 10^5, 7.5 * 10^5, 10* 10^5), side=2, labels = c(2.5 * 10^5,5 * 10^5, 7.5 * 10^5, 10 * 10^5))
+# mtext("d", side = 3, line = -.5, adj = -.25, font = 2)
 
 # Coverage 
 
@@ -74,9 +75,9 @@ power_pop[1, 2] <- mean(apply(sum_10[ , 11:15], 1, max))
 power_pop[2, 2] <- mean(apply(sum_100[ , 11:15], 1, max))
 power_pop[3, 2] <- mean(apply(sum_200[ , 11:15], 1, max))
 
-plot(power_pop, xaxt='n',  xlab = "samples", ylab = "HP population probability", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i")
-Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c(10, 100, 200))
-mtext("e", side = 3, line = -.5, adj = -.25, font = 2)
+# plot(power_pop, xaxt='n',  xlab = "samples", ylab = "HP population probability", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i")
+# Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c(10, 100, 200))
+# mtext("e", side = 3, line = -.5, adj = -.25, font = 2)
 
 ##### Mutation 
 power_mut <- matrix(c(10, 100, 200, 0, 0, 0), nrow = 3, byrow =FALSE)
@@ -85,10 +86,10 @@ power_mut[1, 2] <- mean(apply(sum_10[ , 16:19], 1, max))
 power_mut[2, 2] <- mean(apply(sum_100[ , 16:19], 1, max))
 power_mut[3, 2] <- mean(apply(sum_200[ , 16:19], 1, max))
 
-plot(power_mut, xaxt='n',  xlab = "samples", ylab = "HP mutation probability", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i")
-Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c( 10, 100, 200))
-mtext("f", side = 3, line = -.5, adj = -.25, font = 2)
-#dev.off()}
+# plot(power_mut, xaxt='n',  xlab = "samples", ylab = "HP mutation probability", pch = 16, ylim =c(0,1),  xlim = c(0, 210), yaxs="i", xaxs = "i")
+# Axis(x=c(0,210), at = c(10, 100, 200), side=1, labels = c( 10, 100, 200))
+# mtext("f", side = 3, line = -.5, adj = -.25, font = 2)
+# #dev.off()}
 
 df <- cbind(coverage, bias[,2], CI_size[, 2], power_mut[,2], power_pop[,2])
 df <- as.data.frame(df)
@@ -114,8 +115,8 @@ df <- as.data.frame(df)
 colnames(df) <- c("samples", "cov", "bias", "CI", "mut", "pop")
 df$bias <- df$bias / 1000
 df$CI <- df$CI / 1000
-ylim.prim <- c(0, 1.1 * 10 ^ 6 / 1000)   # in this example, precipitation
-ylim.sec <- c(-20000 / 1000, 0)    # in this example, temperature
+ylim.prim <- c(0, 1.1 * 10 ^ 6 / 1000 / 2)   # in this example, precipitation
+ylim.sec <- c(-20000 / 1000 /2 , 0)    # in this example, temperature
 
 b <- diff(ylim.prim)/diff(ylim.sec)
 a <- ylim.prim[1] - b*ylim.sec[1]
