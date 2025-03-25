@@ -4,33 +4,35 @@ do
 	mkdir $recomb
 	cd $recomb
 
-	for rep in {1..2}
+	for rep in {1..30}
 	do
 		mkdir rep${rep}
 		cd rep${rep}
 	
+		mkdir  l{1..510}
+		mkdir  l{1..510}/trees
+
 		# loop for loci
-		for locus in {1..2}
+		for locus in 10 500 
 		do
-			mkdir l${locus}
-			cd l${locus}
 
 			if [[ "$locus" -lt  11 ]]; then
-				# Need to update
 				length=1000000
+				#length=1000
 			else
 				length=5000
 			fi
 	
-			../../../prepLocus.sh $seed1 $recomb $length & 
+			../../prepLocus.sh $seed1 $recomb $length $locus 
 	
-			((seed1=seed1+2000))
+			wd=$(pwd)
+			echo $wd $seed1 $recomb $length $locus >> ../../start
+			((seed1=seed1+1))
 	
-			cd ../
 		done
-		wait
 
 		cd ../
 	done
 	cd ../
 done
+
