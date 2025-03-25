@@ -38,6 +38,7 @@ burnin = 100000
 sampfreq = 8
 nsample = 500000
 threads = 16  
+checkpoint = 800000 800000
 
 migprior = 1.5 3
 migration = 8
