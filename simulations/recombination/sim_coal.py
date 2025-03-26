@@ -11,6 +11,12 @@ add10 = 0
 if(num_reps == 500):
     add10 = 10
 
+rep_high = 0
+if (num_reps == 10 and rate_r == 1.25e-7):
+    rep_high = int(sys.argv[5])
+    num_reps = 1
+    
+
 tskit.set_print_options(max_lines = 1000000)
 
 theta_A   = 0.00049
@@ -109,8 +115,8 @@ replicates = msprime.sim_ancestry(
     num_replicates = num_replicates)
 
 for replicate_index, ts in enumerate(replicates):
-    name = "l" + str(replicate_index + 1 + add10) + "/interval.txt"
-    name2 = "l" + str(replicate_index + 1 + add10) + "/trees.nwk"
+    name = "l" + str(replicate_index + 1 + add10 + rep_high) + "/interval.txt"
+    name2 = "l" + str(replicate_index + 1 + add10 + rep_high) + "/trees.nwk"
     f_int = open(name, 'w')
     f = open(name2, "w")
     node_dict = {}
