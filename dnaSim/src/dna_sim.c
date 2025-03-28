@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   char* endPtr; /* Needed for strtoul function*/
   char* token; /* Used to tokenize input strings */
 
-  unsigned int RGSeed = 0;   /* Seed for random number generator */
+  unsigned long int RGSeed = 0;   /* Seed for random number generator */
   int randomStart = 1;       /* Determines if the sequence at the root
                              is given or choosen from the stationary distribution*/
   int numBases = 1000;       /* Number of bases in the sequence */
