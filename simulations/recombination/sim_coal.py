@@ -11,10 +11,11 @@ add10 = 0
 if(num_reps == 500):
     add10 = 10
 
-rep_high = 0
-if (num_reps == 10 and rate_r == 1.25e-7):
-    rep_high = int(sys.argv[5])
-    num_reps = 1
+#rep_high = 0
+#if (num_reps == 10 and rate_r == 1.25e-7):
+#    rep_high = int(sys.argv[5])
+#    rep_high = rep_high - 1
+#    num_reps = 1
     
 
 tskit.set_print_options(max_lines = 1000000)
@@ -115,8 +116,10 @@ replicates = msprime.sim_ancestry(
     num_replicates = num_replicates)
 
 for replicate_index, ts in enumerate(replicates):
-    name = "l" + str(replicate_index + 1 + add10 + rep_high) + "/interval.txt"
-    name2 = "l" + str(replicate_index + 1 + add10 + rep_high) + "/trees.nwk"
+    #name = "l" + str(replicate_index + 1 + add10 + rep_high) + "/interval.txt"
+    #name2 = "l" + str(replicate_index + 1 + add10 + rep_high) + "/trees.nwk"
+    name = "l" + str(replicate_index + 1 + add10) + "/interval.txt"
+    name2 = "l" + str(replicate_index + 1 + add10) + "/trees.nwk"
     f_int = open(name, 'w')
     f = open(name2, "w")
     node_dict = {}
@@ -130,9 +133,10 @@ for replicate_index, ts in enumerate(replicates):
 
         f.write(tree.as_newick(node_labels = node_dict))
         f.write("\n")
-        print("Locus" + str(replicate_index + 1) +" tree index " +  str(tree.index))
-        print(ts.tables.migrations)
         node_dict.clear()
+    if (length != 5000):
+        print("Locus" + str(replicate_index + 1) )
+        print(ts.tables.migrations)
     f_int.close()
 f.close()
 

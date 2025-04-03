@@ -1,5 +1,5 @@
 
-for dir in {mid,high}/rep{1..2}
+for dir in {mid,high}/rep{1..30}
 do
 
 	echo $dir
