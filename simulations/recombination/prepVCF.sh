@@ -15,7 +15,6 @@ do
 			Rscript ../../../findAncestral.R seq.fa > ancestral_seq.fa
 			python3 ../../../makeVCF.py seq.fa seq.vcf ancestral_seq_test.fa
 			bgzip -f seq.vcf && tabix seq.vcf.gz
-			exit
 			cd ../
 		done
 		cd ../
