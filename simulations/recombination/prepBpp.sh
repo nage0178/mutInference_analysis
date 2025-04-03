@@ -1,15 +1,15 @@
 
-for recomb in mid high
+for recomb in mid  high
 do
 	cd $recomb
 
-	for rep in {1..2}
+	for rep in {1..30}
 	do
 		cd rep${rep}
 		rm -f bpp_seq.txt
-	
+
 		# loop for loci
-		for locus in {1..2}
+		for locus in {1..510}
 		do
 			# These programs are all by loci
 			# Prepare argweaver files
@@ -58,7 +58,6 @@ do
 								numMut=$(grep -E "\sSite:\s$site," mut_${tree}.txt | wc | awk '{print $1}')
 								time=$(grep -E "\sSite:\s$site," mut_${tree}.txt | sed 's/,//g'|  awk '{print $6}' )
 								echo $time
-								grep -E "\sSite:\s$site," mut_${tree}.txt 
 								if [ $numMut = 1 ]; then 
 
 									count=$(grep -v ">" seq${tree}.fa | awk -v k=$site  '{ print substr( $0, k, 1 ) }'  | sort | uniq -c )
@@ -74,7 +73,8 @@ do
 									((alignSite=start+site))
 									((finalStart=alignSite-2500))
 									 ((finalEnd=alignSite+2499))
-									echo Recomb $recomb Rep $rep Locus $locus Start $start Site $site finalSite $alignSite $finalStart $finalEnd Ancestral $anc
+									echo Recomb $recomb Rep $rep Locus $locus Start $start Site $site finalSite $alignSite $finalStart $finalEnd Ancestral $anc > siteInfo
+									grep -E "\sSite:\s$site," mut_${tree}.txt > mutInfo
 									breakLine=1
 
 									# Now cut alignment
