@@ -12,14 +12,6 @@ f_ref = sys.argv[3]
 alignment = AlignIO.read(f_input, "fasta")
 reference = AlignIO.read(f_ref, "fasta")
 
-# Print the alignment
-#print(alignment)
-#
-## Iterate through the alignment records
-#for record in alignment:
-#    print(record.id)
-#    print(record.seq)
-
 align_array = np.array(alignment)
 ref_array = np.array(reference)
 
@@ -102,7 +94,7 @@ f.write(str(align_array.shape[1]))
 f.write(">\n##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n")
 f.write("##INFO=<ID=AA,Number=1,Type=String,Description=\"Ancestral Allele\">\n")
 f.write("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t")
-#for record in alignment:
+
 for sample in range(0, align_array.shape[0], 2):
     f.write(alignment._records[sample].id)
     f.write(alignment._records[sample+1].id)
@@ -127,13 +119,3 @@ for site in range(index):
         f.write(str(vcf_mat[sample][site])+ "|" + str(vcf_mat[sample + 1][site]) )
     f.write("\n")
 f.close()
-        #vcf_mat
-## Read multiple MSAs from a file
-#alignments = AlignIO.parse("example.phylip", "phylip")
-#
-## Iterate through the alignments
-#for alignment in alignments:
-#    print(alignment)
-#    for record in alignment:
-#        print(record.id)
-#        print(record.seq)
