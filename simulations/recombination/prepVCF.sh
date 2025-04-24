@@ -1,4 +1,3 @@
-#rm -r test.vcz
 
 for recomb in mid  high
 do
@@ -13,7 +12,7 @@ do
 		do
 			cd l${locus}
 			Rscript ../../../findAncestral.R seq.fa > ancestral_seq.fa
-			python3 ../../../makeVCF.py seq.fa seq.vcf ancestral_seq_test.fa
+			python3 ../../../makeVCF.py seq.fa seq.vcf ancestral_seq.fa
 			bgzip -f seq.vcf && tabix seq.vcf.gz
 			cd ../
 		done
