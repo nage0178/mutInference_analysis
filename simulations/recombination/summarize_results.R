@@ -1,3 +1,7 @@
+library(ggplot2)
+library(tidyverse)
+library(cowplot)
+
 bpp <- read.csv("~/mutInference_analysis/simulations/recombination/summary")
 true <- read.csv("~/mutInference_analysis/simulations/recombination/trueHist")
 
@@ -18,34 +22,30 @@ bpp$time <- bpp_time
 bpp$timeG <- bpp_timeG
 bpp$pop <- bpp_pop
 # 
+for (i in 1:dim(bpp)[1]) {
+  if (bpp$pop[i] == "0") {
+    bpp$pop[i] = "ABC"
+  } else if (bpp$pop[i] == "1") {
+    bpp$pop[i] = "AB"
+  } else if (bpp$pop[i] == "2") {
+    bpp$pop[i] = "A"
+  }else if (bpp$pop[i] == "3") {
+    bpp$pop[i] = "B"
+  }else if (bpp$pop[i] == "4") {
+    bpp$pop[i] = "C"
+  } else if (bpp$pop[i] == "5") {
+    bpp$pop[i] = "C"
+  } else if (bpp$pop[i] == "root") {
+    bpp$pop[i] = "ABC"
+  }
+}
 
-mean((bpp$time_25 < bpp$time) * (bpp$time_975 > bpp$time))
-  
 relate <- read.csv("~/mutInference_analysis/simulations/recombination/relate/relate_results.txt")
-#relateHigh <- relate[which(relate$recomb == "high"), ]
-mean((relate$lower < relate$generations) * (relate$generations < relate$upper))
-mean((relate$lower + relate$upper)/2 - relate$generations)
-
 mutance <- read.csv("~/mutInference_analysis/simulations/locusLength/summary")
 mut5000 <- mutance[which(mutance$length ==5000), ]
-mean((mut5000$mean_time  - mut5000$time)/(2.0 * 10^-8))
-
-mean((mut5000$time_25 < mut5000$time) * (mut5000$time < mut5000$time_975))
-
-sqrt(mean(((mut5000$mean_time - mut5000$time)/(2.0 * 10^-8))^2))
-sqrt(mean(((relate$lower + relate$upper)/2 - relate$generations)^2))
 
 tsdate <- read.csv("~/mutInference_analysis/simulations/recombination/tsdate_results.txt")
-#tsdate <- tsdate[which(tsdate$recomb == "high"), ]
-sqrt(mean((tsdate$mean - tsdate$generations)^2, na.rm = TRUE))
-
-dim(tsdate)
-mean(tsdate$mean - tsdate$generations) 
-mean((tsdate$mean - 2 * sqrt(tsdate$var) < tsdate$generations) * 
-       ( tsdate$generations < tsdate$mean + 2 * sqrt(tsdate$var)))
-
 aw <- read.csv("~/mutInference_analysis/simulations/recombination/arg_results.txt")
-
 
 bias <- c(mean((relate$lower + relate$upper)/2 - relate$generations), 
           mean(tsdate$mean - tsdate$generations), 
@@ -75,34 +75,51 @@ CI_size <- c(mean(relate$upper - relate$lower),
              mean(bpp$time_975 - bpp$time_25)/(2.0 * 10^-8), 
              mean(mut5000$time_975 - mut5000$time_25)/(2.0 * 10^-8))
 
-names(bias) <- c("relate", "tsdate", "ARGweaver", "mutance", "mutanceNoRecomb")
+names(bias) <- c("relate", "tsdate", "ARGweaver", "MutAnce", "MutAnce no \nrecombination")
 names(RMSE) <- names(bias)
 names(coverage) <- names(bias)
 names(CI_size) <- names(bias)
-plot(bias)
-plot(abs(bias))
-plot(RMSE)
-plot(coverage)
-plot(CI_size)
+# plot(bias)
+# plot(abs(bias))
+# plot(RMSE)
+# plot(coverage)
+# plot(CI_size)
 df <- as.data.frame(cbind(bias,RMSE, coverage, CI_size))
 df$method <- rownames(df)
 df$method <- as.factor(df$method)
-library(ggplot2)
-library(tidyverse)
+
 ylim.prim <- c(-7000, 17000)   # in this example, precipitation
 ylim.sec <- c(0, 1)    # in this example, temperature
 
 b <- diff(ylim.prim)/diff(ylim.sec)
 a <- ylim.prim[1] - b*ylim.sec[1]
 df <- cbind(df, (df$coverage*b + a)) 
-colnames(df)[6] <- "rescale_cov"
+colnames(df)[3] <- "coverage_original"
+colnames(df)[6] <- "coverage"
+colnames(df)[4] <- 'CI size'
 
-my_df2 <- df %>% select(method, bias, RMSE,rescale_cov) %>% 
+
+my_df2 <- df %>% select(method, bias, RMSE,'CI size',coverage) %>% 
+#my_df2 <- df %>% select(method, bias, RMSE,CI size) %>% 
   gather(key = "statistic", value = `generations`, -method)
+my_df2$statistic <- factor(my_df2$statistic, levels = c("bias", "RMSE", "CI size", "coverage"))
 
-ggplot(my_df2, aes(x=method, y = generations)) +
-  geom_point(aes(color=statistic)) +
-  scale_y_continuous( sec.axis = sec_axis(~ (. - a)/b, name = "coverage         ")) + theme_classic() #+ 
+
+p1 <- ggplot(my_df2, aes(x=statistic, y = generations)) +
+  geom_point(aes(color=method)) +
+  xlab("")+
+  scale_y_continuous( sec.axis = sec_axis(~ (. - a)/b, name = "coverage         ")) + 
+  geom_segment(aes(x=3.5, xend = 4.5, y= .95*b + a, yend = .95 * b + a),  lty= 2)+
+  geom_segment(aes(x=.5, xend = 1.5, y= 0, yend = 0),  lty= 3)+
+  theme_classic() + theme() 
+
+# p2 <- ggplot(df, aes(x = method, y = coverage)) + 
+#   geom_point() + 
+#   scale_y_continuous(limits=c(0,1)) +
+#   theme_classic() + 
+#   xlab("")+
+#   geom_hline(aes(yintercept = .95),  lty= 2)+
+#   theme(axis.text.x = element_text(angle = 45,  hjust = 1)) 
 
 
 
@@ -119,13 +136,14 @@ results$method <- as.factor(results$method)
 results$lower <- as.numeric(results$lower)
 results$upper <- as.numeric(results$upper)
 
-library(ggplot2)
-xy.limits <- range( c(results$lower,results$upper) )
 xy.limits <- range( c(results$true,results$estimated) )
-
+ 
+results$recomb[which(results$recomb == "mid")] <- "medium"
 # Anna need to replace mutance with recombination, add argweaver, add recombination rates
-ggplot(results, aes(x=true, y= estimated )) + 
+allScatter <- ggplot(results, aes(x=true, y= estimated )) + 
   geom_point() + 
+  xlab("true time (generations)") +
+  ylab("inferred time (generations)") +
   facet_grid(recomb~ method) + 
   geom_abline(intercept = 0, slope = 1) +
   scale_x_continuous(limits=xy.limits) + 
@@ -133,5 +151,25 @@ ggplot(results, aes(x=true, y= estimated )) +
   coord_fixed( ratio=1) + 
   theme_bw() #+ 
   #geom_errorbar(aes(true, ymin = lower, ymax = upper), col= )
+pdf("~/mutationSim/figs/all_methods_scatter.pdf", width=8, height = 4)
+ggarrange(allScatter, labels = c("a"))
+dev.off()
   
-ggplot(results, aes(x=method, y = upper - lower)) + geom_point() + facet_grid
+noRecomb <- read.table("~/mutInference_analysis/simulations/locusLength/mut_table.txt")
+noRecomb <- cbind("zero", noRecomb)
+colnames(noRecomb) <- colnames(bpp)[c(1,2,3,16)]
+bpp_df <- as.data.frame(rbind(bpp[c(1,2,3,16)], noRecomb))
+
+bpp_df$recomb[which(bpp_df$recomb == "mid")] <- "medium"
+bpp_df$recomb <- factor(bpp_df$recomb, levels = c("zero", "medium", "high"))
+p_multMut <- ggplot(bpp_df, aes(x = multMut)) + facet_wrap(~recomb)+
+  scale_x_continuous( breaks = c(0, 0.5, 1.0), labels =c(0, 0.5, 1.0), position = "bottom" ) +
+  geom_histogram(binwidth = .08, aes(y =stat(width*density) )) +  scale_y_continuous(labels = scales::percent, limits=c(0,1), expand = c(0, 0)) + theme_classic() + #coord_cartesian(ylim= c(0,1))+
+  xlab("posterior probability of multiple mutations") +
+  ylab("percentage of inferences") 
+
+pdf("~/mutationSim/figs/all_methods_summary.pdf", width=8, height = 2.5)
+ggarrange(p1, p_multMut, labels = c("b", "c"), nrow = 1, widths = c(3.2,2.5))
+dev.off()
+
+
