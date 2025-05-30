@@ -1,7 +1,8 @@
 path=~/relate/
+rm -r relate
 mkdir relate
 cd relate
-N=$(cat N_est)
+N=$(awk '{ print $1 * 2 }'  ../N_est)
 ${path}/bin/RelateFileFormats \
                  --mode ConvertFromVcf \
                  --haps seq.haps \
@@ -11,6 +12,7 @@ ${path}/bin/RelateFileFormats \
 ${path}/bin/RelateFileFormats \
                  --mode RemoveNonBiallelicSNPs \
                  --haps seq.haps \
+		 -o seq_biallelic
 
 ${path}/bin/Relate \
       --mode All \
@@ -18,6 +20,6 @@ ${path}/bin/Relate \
       -N ${N} \
       --haps seq_biallelic.haps \
       --sample seq.sample \
-      --map ../../../../map.example \
+      --map ../../../../relate/map.example \
       --seed 1 \
       -o relate 
