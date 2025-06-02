@@ -11,4 +11,4 @@ HKYfile = locus.1.sample.txt
 
 locus = 1
 
-site = 2500
+site = 2502

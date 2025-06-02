@@ -19,6 +19,8 @@ do
 		do
 			sed "s/1/${focal}/g" ../../../mutInf.ctl > L${focal}.ctl
 
+			sed -i "s/site = 2502/site = 2501/g" L${focal}.ctl
+
 		done
 		cd ../../
 

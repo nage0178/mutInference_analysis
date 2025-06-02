@@ -1,6 +1,6 @@
 
-echo recomb,rep,locus,pop,time
-for recomb in mid  high
+echo recomb,rep,locus,pop,timeG,timeMu
+for recomb in  mid  high
 do
 	cd $recomb
 
@@ -77,6 +77,7 @@ do
 
 
 				time=$(awk '{print $6}' l${locus}/mutInfo | sed 's/,//g')
+				timeMu=$(awk '{print $8}' l${locus}/mutInfo | sed 's/,//g')
 				if [ "$mutHist" ]; then
 					echo $mutHist | awk '{
 					  for (i = 1; i <= NF; i++) {
@@ -111,7 +112,7 @@ do
 				fi
 
 
-				echo ${recomb},${rep},${locus},${pop},${time}
+				echo ${recomb},${rep},${locus},${pop},${time},${timeMu}
 
 		done
 
