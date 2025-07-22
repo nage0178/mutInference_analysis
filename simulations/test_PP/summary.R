@@ -1,17 +1,19 @@
-files <- c("~/AlPop/tree1/migLow/summary2", 
-           "~/AlPop/tree1/migHigh/summary2", 
-           "~/AlPop/tree2/migLow/summary2",
-           "~/AlPop/tree2/migHigh/summary2", 
-           "~/AlPop/tree2/migVHigh/summary2")
+# files <- c("~/AlPop/tree1/migLow/summary2", 
+#            "~/AlPop/tree1/migHigh/summary2", 
+#            "~/AlPop/tree2/migLow/summary2",
+#            "~/AlPop/tree2/migHigh/summary2", 
+#            "~/AlPop/tree2/migVHigh/summary2")
 
-#files <- c("~/mutInference_analysis/tree1/migLow/summary2", 
-#           "~/mutInference_analysis/tree1/migHigh/summary2", 
-#           "~/mutInference_analysis/tree2/migLow/summary2",
-#           "~/mutInference_analysis/tree2/migHigh/summary2", 
-#           "~/mutInference_analysis/tree2/migVHigh/summary2")
-pdf("~/mutationSim/popOrigin_summary.pdf")
+files <- c("~/mutInference_analysis/simulations/test_PP/tree1/migLow/summary2_fix",
+          "~/mutInference_analysis/simulations/test_PP/tree1/migHigh/summary2_fix",
+          "~/mutInference_analysis/simulations/test_PP/tree2/migLow/summary2_fix",
+          "~/mutInference_analysis/simulations/test_PP/tree2/migHigh/summary2_fix",
+          "~/mutInference_analysis/simulations/test_PP/tree2/migVHigh/summary2_fix")
+pdf("~/mutationSim/popOrigin_summary_check.pdf")
+#png("~/mutationSim/popOrigin_summary_check.png")
 
 for (j in 1:5) {
+#for (j in 1:1){
   file <- files[j]
   sum <- read.csv(file, header =TRUE)
 
@@ -98,11 +100,16 @@ popCor/popBin
 sumBin / popBin
 popBin
 
+par(xpd=NA)
+
 if ( j == 1) {
-  plot(popCor/popBin, sumBin / popBin, pch= 20, type ="o", xlab = "proportion correct in bin", ylab = "average posterior probability in bin")
+  plot(cex = 1.7, cex.lab = 1.7, cex.main = 1.7 ,  popCor/popBin, sumBin / popBin, pch= 20, type ="o", xlab = "proportion correct in bin", ylab = "average posterior probability in bin", xaxt="n", yaxt = "n", main= "Population of Origin")
   legend(0, .95, legend=c("1", "2", "3", "4", "5"),  title = "Simulation",
-         fill = c(1, 2,3, 4, 5)
+         fill = c(1, 2,3, 4, 5), title.cex =1.7, cex = 1.7
   )
+  axis(1, cex.axis=1.7)
+  axis(2, cex.axis=1.7)
+  text(-.17, 1.15, substitute(paste(bold('a'))), cex=2.2)
 } else {
   lines(popCor/popBin, sumBin / popBin, pch= 20, type ="o", col = j)
 }
@@ -120,7 +127,9 @@ high
 }
 dev.off()
 
-pdf("~/mutationSim/mutation_summary.pdf")
+pdf("~/mutationSim/mutation_summary_check.pdf")
+#png("~/mutationSim/mutation_summary_check.png")
+
 for (j in 1:5) {
   file <- files[j]
   sum <- read.csv(file, header =TRUE)
@@ -161,11 +170,16 @@ for (i in 1:dim(sum)[1]) {
   
 
 }
+par(xpd=NA)
+
 if ( j == 1) {
-  plot(popCor/popBin, sumBin / popBin, pch= 20, type ="o", xlab = "proportion correct in bin", ylab = "average posterior probability in bin")
+  plot(cex = 1.7,  cex.main = 1.7, cex.lab = 1.7, popCor/popBin, sumBin / popBin, pch= 20, type ="o", xlab = "proportion correct in bin", ylab = "average posterior probability in bin", xaxt="n", yaxt = "n", main = "Mutant Nucleotide")
   legend(0, .95, legend=c("1", "2", "3", "4", "5"),  title = "Simulation",
-         fill = c(1, 2,3, 4, 5)
+         fill = c(1, 2,3, 4, 5), title.cex =1.7, cex = 1.7
   )
+  axis(1, cex.axis=1.7)
+  axis(2, cex.axis=1.7)
+  text(-.17, 1.15, substitute(paste(bold('b'))), cex=2.2)
 } else {
   lines(popCor/popBin, sumBin / popBin, pch= 20, type ="o", col = j)
 }

@@ -103,7 +103,7 @@ p1 <- ggplot(my_df, aes(x = samples, y = probability) ) +
   labs(color = "", linetype ="", ) +
   scale_color_discrete(labels = c("coverage", "HP mutation", "HP population")) +
   scale_linetype_discrete(labels = c("coverage", "HP mutation", "HP population")) +
-  scale_x_continuous( breaks = c(0, 10, 100, 200), labels =c(0, 100, 100, 200), position = "bottom" ) +
+  scale_x_continuous( breaks = c(0, 10, 100, 200), labels =c(0, 10, 100, 200), position = "bottom" ) +
   geom_line(aes(color = variable, linetype = variable)) + geom_point(aes(col = variable)) +
   scale_y_continuous(limits = c(0,1)) + 
   theme_classic() + 
@@ -120,9 +120,9 @@ ylim.sec <- c(-20000 / 1000 /2 , 0)    # in this example, temperature
 
 b <- diff(ylim.prim)/diff(ylim.sec)
 a <- ylim.prim[1] - b*ylim.sec[1]
-df <- cbind(df, (bias - a)/ b) 
+df <- cbind(df, (df$bias*b + a)) 
 colnames(df)[3] <- "original_bias"
-colnames(df)[8] <- "bias"
+colnames(df)[7] <- "bias"
 
 my_df2 <- df %>% select(samples, CI, bias) %>% 
   gather(key = "variable", value = `credible interval size`, -samples)

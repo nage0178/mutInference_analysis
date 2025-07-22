@@ -150,9 +150,9 @@ ylim.sec <- c(-20000 / 1000 /2, 0)    # in this example, temperature
 
 b <- diff(ylim.prim)/diff(ylim.sec)
 a <- ylim.prim[1] - b*ylim.sec[1]
-df <- cbind(df, (bias - a)/ b) 
+df <- cbind(df, (df$bias*b + a))  #cbind(df, (df$bias - a)/ b) 
 colnames(df)[3] <- "original_bias"
-colnames(df)[8] <- "bias"
+colnames(df)[7] <- "bias"
 
 my_df2 <- df %>% select(length, CI, bias) %>% 
   gather(key = "variable", value = `credible interval size`, -length)
@@ -163,7 +163,7 @@ p2 <- ggplot(my_df2, aes(x = length, y = `credible interval size`)) +
   scale_y_continuous( sec.axis = sec_axis(~ (. - a)/b, name = "bias         ")) + 
   scale_x_continuous( breaks = c(0, 1000, 5000, 10000, 15000), labels =c(0, 1000, 5000, 10000, expression(infinity)), position = "bottom") + 
   theme_classic() + scale_x_break(c(12000, 13000),) +
-  theme(legend.position = "bottom",  axis.title.x = element_text(vjust=20), axis.title.y = element_text(vjust=-5, hjust=.75)) 
+  theme(legend.position = "bottom",  axis.title.x = element_text(vjust=20), axis.title.y = element_text(vjust=-3, hjust=.6)) 
 
 pdf.options(reset = TRUE, onefile = FALSE)
 library(grid)

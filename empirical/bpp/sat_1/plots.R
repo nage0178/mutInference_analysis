@@ -3,7 +3,7 @@ library(forcats)
 library(reshape)
 library(ggpubr)
 library(cowplot)
-times <- read.csv("~/mutInference_analysis/empirical/sat_1/summary", header = TRUE)
+times <- read.csv("~/mutInference_analysis/empirical/bpp/sat_1/summary", header = TRUE)
 
 mu_rate <-  10 ^-9
 
@@ -20,6 +20,30 @@ plot_one <- ggplot(times) + ylab("time (years)")  +
   geom_rect(ymin = internal_L_HPD, ymax = internal_H_HPD, 
             xmin = -Inf, xmax = Inf, fill = 'grey') +  
    scale_x_discrete(labels=c('ASIP', 'MATP', 'MCIR 79', 'MCIR 78', "OCA2", "SLC24A5", "TYR")) +
+  geom_point(aes(x = gene, y = meanTime /mu_rate)) + geom_errorbar(aes(gene, ymin = L_HPD / mu_rate, ymax = H_HPD/mu_rate)) + 
+  theme_classic() 
+dev.off()
+
+png("~/mutationSim/figs/empirical_time_blank.png", height = 4, width = 6, units= "in", res = 500)
+ggplot(times) + ylab("time (years)")  + 
+  scale_x_discrete(labels=c('ASIP', 'MATP', 'MCIR 79', 'MCIR 78', "OCA2", "SLC24A5", "TYR")) +
+ geom_errorbar(aes(gene, ymin = L_HPD / mu_rate, ymax = H_HPD/mu_rate), col= 'white') + 
+  geom_rect(ymin = root_L_HPD, ymax = root_H_HPD, 
+            xmin = -Inf, xmax = Inf, fill = 'grey') +  
+  geom_rect(ymin = internal_L_HPD, ymax = internal_H_HPD, 
+            xmin = -Inf, xmax = Inf, fill = 'grey') + 
+  theme_classic() 
+dev.off()
+
+
+png("~/mutationSim/figs/empirical_time.png", height = 4, width = 6, units= "in", res = 500)
+#plot_one <- 
+ggplot(times) + ylab("time (years)")  + 
+  geom_rect(ymin = root_L_HPD, ymax = root_H_HPD, 
+            xmin = -Inf, xmax = Inf, fill = 'grey') +  
+  geom_rect(ymin = internal_L_HPD, ymax = internal_H_HPD, 
+            xmin = -Inf, xmax = Inf, fill = 'grey') +  
+  scale_x_discrete(labels=c('ASIP', 'MATP', 'MCIR 79', 'MCIR 78', "OCA2", "SLC24A5", "TYR")) +
   geom_point(aes(x = gene, y = meanTime /mu_rate)) + geom_errorbar(aes(gene, ymin = L_HPD / mu_rate, ymax = H_HPD/mu_rate)) + 
   theme_classic() 
 dev.off()
@@ -48,7 +72,16 @@ plot_two <- ggplot(summaryMult) + ylab("time (years)") + xlab("gene") +
   theme_classic() + facet_wrap(~gene, labeller = labeller(gene = gene.labs))
 dev.off()
 
+png("~/mutationSim/figs/empirical_time_two.png", height = 4, width = 6,units ="in", res = 1200)
+plot_two 
+dev.off()
+
+
 pdf("~/mutationSim/figs/empirical_time_both.pdf", height = 4, width = 12)
+ggarrange(plot_one, plot_two, ncol = 2, labels = c("a", "b")) 
+dev.off()
+
+png("~/mutationSim/figs/empirical_time_both.png", height = 4, width = 12, units ="in", res = 1200)
 ggarrange(plot_one, plot_two, ncol = 2, labels = c("a", "b")) 
 dev.off()
 # Probability of multiple  ??
@@ -121,4 +154,31 @@ leg2 <- as_ggplot(legend2)
 
 pdf("~/mutationSim/figs/empirical_pop_both.pdf", height = 4, width = 12)
 ggarrange(pop_one, pop_two, leg2, ncol = 3, labels = c("a", "b", ""), widths = c(5, 5, 1.25)) 
+dev.off()
+
+png("~/mutationSim/figs/empirical_pop_both.png", height = 4, width = 12, res= 1200, units= "in")
+ggarrange(pop_one, pop_two, leg2, ncol = 3, labels = c("a", "b", ""), widths = c(5, 5, 1.25)) 
+dev.off()
+
+png("~/mutationSim/figs/empirical_pop_one.png", height = 4, width = 6, res= 1200, units= "in")
+pop_one
+dev.off()
+
+png("~/mutationSim/figs/empirical_pop_two.png", height = 4, width = 6, res= 1200, units= "in")
+pop_two
+dev.off()
+
+pop_two_leg_png <- ggplot(mult_times, aes(x = mutNum , y = value, fill = population)) + facet_wrap(~gene, labeller = labeller(gene = gene.labs))+ xlab("gene") + 
+  ylab("Posterior Probability") + 
+  geom_bar(position="stack", stat="identity", ) + 
+  # facet_grid(length~base, space="free_x", scales = "free_x") +
+  theme_bw() + 
+  scale_y_continuous(expand = c(0,0))+
+  theme(legend.position="bottom")  +
+  theme( panel.grid.major = element_blank(), panel.grid.minor = element_blank()) #+ #axis.title.x=element_blank(), axis.text.x=element_blank(), 
+#axis.ticks.x=element_blank())
+
+
+png("~/mutationSim/figs/empirical_pop_two_leg.png", height = 4, width = 6, res= 1200, units= "in")
+pop_two_leg_png
 dev.off()
