@@ -4,3 +4,13 @@
 empirial/msa/
 empirical/vcf_small/
 empirical/ref
+*.o
+simulations/recomb/
+simulations/recombination/high/
+simulations/recombination/mid/
+simulations/test_PP/tree*/mig*/summary2*
+empirical/bpp/sat_1*/jointPopProb*
+empirical/bpp/sat_1*/out*
+simulations/test_PP/tree*/mig*/rep*
+
+
