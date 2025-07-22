@@ -1,4 +1,4 @@
-
+# This creates tables of about the inferences 
 
 echo gene,probMult,meanTime,L_HPD,H_HPD,mean_1,L_HPD_1,H_HPD_1,mean_2,L_HPD_2,H_HPD_2,GBR,LWK,CHS,GBRCHS,LWKGBRCHS,GBR1,LWK1,CHS1,GBRCHS1,LWKGBRCHS1,GBR2,LWK2,CHS2,GBRCHS2,LWKGBRCHS2 > summary
 for gene in ASIP MATP MCIR_1 MCIR_2 OCA2 SLC24A5 TYR

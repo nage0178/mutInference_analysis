@@ -38,7 +38,7 @@ print = 1 0 0 1 1
 burnin = 200000
 sampfreq = 8
 nsample = 500000
-threads = 32
+threads = 32 1 1
 printlocus = 6 1 2 3 4 5 6 
 checkpoint = 800000 800000
 
