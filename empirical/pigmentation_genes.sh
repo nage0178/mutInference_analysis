@@ -5,10 +5,14 @@
 #NC_000022.11 (36253133..36267525) 
 
 rm -rf pigm_gene*
+# For three sequence lengths
 for length in 1000 5000 10000
 do
+	# Find the coordinates for the pigmentation sequences 
 	Rscript pigm_coords.R $length > gene_file_$length
 	mkdir pigm_gene_$length
+
+	# For each of the genes
 	for line in $(cat gene_file_${length})
 	do
 		gene=$(echo $line | awk -F , '{print $1}')
@@ -23,6 +27,7 @@ do
 		bgzip -f pigm_gene_${length}/${gene}.vcf && tabix pigm_gene_${length}/${gene}.vcf.gz
 		
 		
+		# Find the two haplotypes for an individual 
 		for name in $(cat AsEuAfrNoChildLong.txt)
 		do
 			echo $name
@@ -32,6 +37,7 @@ do
 		done
 		
 		
+		# Add the sequences to a file to be aligned
 		for name in $(cat AsEuAfrNoChildLong.txt) 
 		do
 			cat pigm_gene_${length}/${gene}_${name}_1 >> pigm_gene_${length}/${gene}_msa.txt
@@ -39,11 +45,8 @@ do
 		
 		done
 		
-		# Using plus strand only
-		#tr -d '\n' <  APOL1_msa.txt | sed 's/>/\n>/g' |sed 's/5227071/5227071\n/g'| tail -n +2 > APOL1_msa_noSpace.txt
-		#echo >> APOL1_msa_noSpace.txt
-		#cat msa_noSpace.txt | while read L; do if [[ $L =~ ^'>' ]]; then echo $L; else echo $L | rev | tr "ATGCatgc-" "TACGtacg-" ; fi ; done  > msa_final.txt
 		
+		# Align the sequences
 		mafft pigm_gene_${length}/${gene}_msa.txt >  pigm_gene_${length}/${gene}_msa_align.txt
 	
 	done

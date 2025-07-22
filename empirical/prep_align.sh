@@ -10,6 +10,7 @@ mkdir vcf_small
 mkdir ref
 
 
+# This prepares alignments for each of the loci on chromosomes 1-10
 for i in 1 2 3 4 5 6 7 8 9 10
 do
 	./prepChrom_i.sh $i &> outPrep${i} 
@@ -21,9 +22,11 @@ wait
 
 rm -f AsEuAfr_seq.txt
 
+# This prepares the alignments for the skin pigmentation loci
 ./pigmentation_genes.sh
 
 # Prepare format for bpp
+# First sequences are the pigmentation genes
 for line in $(cat gene_file)
 do
 	gene=$(echo $line | awk -F , '{print $1}')
@@ -43,6 +46,7 @@ do
 
 done
 
+# After the pigmentation genes the randomly choosen loci are added
 for i in 1 2 3 4 5 6 7 8 9 10
 do
 	j=1

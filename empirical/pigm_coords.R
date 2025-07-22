@@ -45,6 +45,7 @@ rownames(coords) <- c("TYR",
 
 colnames(coords) <- c("location", "start", "end", "chrom")
 
+# Check if the start location would be outside of the gene if the SNP of interest were in the middle
 start <- coords[,1]-(length / 2)
 for (i in 1:7) {
   if (start[i] < coords[i, 2]) {
@@ -52,6 +53,7 @@ for (i in 1:7) {
   }
 }
 
+# Check if the end location would be outside of the gene if the SNP of interest were in the middle
 end <- start + (length -1)
 for (i in 1:7) {
   if (end[i] > coords[i, 3]) {
@@ -60,6 +62,7 @@ for (i in 1:7) {
   }
 }
 
+# Check if the gene is shorter than the desired length
 for (i in 1:7) {
   if (coords[i, 3] - coords[i,2] < length) {
     start[i] <- coords[i,2]
@@ -67,6 +70,8 @@ for (i in 1:7) {
   }
 }
 
+
+# Print the coordinates to use
 for (i in 1:7) {
   if (i != 5) {
     cat(paste(rownames(coords)[i], ",chr", coords[i,4], ":", start[i], "-", end[i], "\n", sep = ""))
