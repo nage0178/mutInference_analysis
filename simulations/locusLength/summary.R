@@ -161,7 +161,7 @@ p2 <- ggplot(my_df2, aes(x = length, y = `credible interval size`)) +
   geom_line(aes(color = variable, linetype = variable)) + geom_point(aes(col = variable)) +
   labs(color = "", linetype ="", ) +
   scale_y_continuous( sec.axis = sec_axis(~ (. - a)/b, name = "bias         ")) + 
-  scale_x_continuous( breaks = c(0, 1000, 5000, 10000, 15000), labels =c(0, 1000, 5000, 10000, expression(infinity)), position = "bottom") + 
+  scale_x_continuous( breaks = c(0, 1000, 5000, 10000, 15000), labels =c(0, 1000, 5000, 10000, expression(infinity)), position = "bottom", sec.axis = dup_axis(breaks = NULL)) + 
   theme_classic() + scale_x_break(c(12000, 13000),) +
   theme(legend.position = "bottom",  axis.title.x = element_text(vjust=20), axis.title.y = element_text(vjust=-3, hjust=.6)) 
 
