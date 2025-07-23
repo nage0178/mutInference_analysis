@@ -22,8 +22,6 @@ cd $dir
 # Only start the analysis on jobs that finished
 # need to check convergence first
 	if [[ -f FigTree.tre ]]; then
-		#echo $num $dir $focal >> ../../checking
-		#pwd >> ../../checking2
 
 		MutAnce L${focal}.ctl &> out${focal}
 	fi

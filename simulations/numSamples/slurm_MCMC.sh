@@ -19,7 +19,6 @@ dir=$(awk -v i=$num '{print $i}' runDir)
 cd $dir
 if [[ ! -f FigTree.tre ]]; then
 
-	#echo $dir >> ../../notDone
-#	~/bpp/src/bpp --cfile inference.ctl --theta_mode 3 &> output &
+	~/bpp/src/bpp --cfile inference.ctl --theta_mode 3 &> output &
 fi
 wait;
