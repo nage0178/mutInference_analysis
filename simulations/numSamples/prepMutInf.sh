@@ -14,16 +14,16 @@ do
 	# Prepare alignments with different sequence lengths
 	for numSample in 10 100 200 
 	do
-		# What are you doing here
-		#cd ${length}_{1,2}
 		cd ${numSample}_1
 
+		# For each of the 10 focual loci
 		for focal in {1..10}
 		do
+			# Generate control files
 			sed "s/1/${focal}/g" ../../mutInf.ctl > L${focal}.ctl
 			sed -i "s/simulate_IM.txt/..\/seq_${numSample}.txt/g" L${focal}.ctl
 
-			#site=$(grep "Locus ${focal} " siteNumbers | awk '{print $4}')
+			# Specify the SNP of interest
 			site=$(grep "Locus ${focal} " ../../siteNumbers | head -${rep}  | tail -n 1 | awk '{print $4}')
 			sed -i "s/site = 2/site = ${site}/g" L${focal}.ctl
 

@@ -31,10 +31,3 @@ do
 	echo $rep $mean1 $mean2 >> ESS
 done
 
-grep -v 18/100 means > tmpmeans
-grep -v 18/100 variance > tmpvariance
-grep -v 18/100 ESS > tmpESS
-
-mv tmpmeans means
-mv tmpvariance variance
-mv tmpESS ESS
