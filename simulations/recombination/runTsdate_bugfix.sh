@@ -5,6 +5,6 @@
 
 python3 -m bio2zarr vcf2zarr convert --force seq.vcf.gz seq.vcz
 
-python3 ../../../tsinfer_date_bugfix.py seq.vcz > outTsMutation
+python3 ../../../tsinfer_date_bugfix.py seq.vcz > outTsMutation_bugfix
 
 #deactivate
