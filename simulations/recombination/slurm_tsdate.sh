@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --partition=med2
+#SBATCH --account=brannalagrp
+#SBATCH --job-name=tsdate
+#SBATCH --mail-user=aanagel@ucdavis.edu
+#SBATCH --mail-type=ALL
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --array=1-600
+#SBATCH --time=1:00:00
+#SBATCH --output=log/%A.%a.out
+
+
+#Only doing medium to start
+num=$((SLURM_ARRAY_TASK_ID))
+dir=$(awk -v i=$num '{print $i}' locusDir )
+
+
+#module load python/3.11.9
+source tsInferDate/bin/activate 
+
+cd $dir
+../../../runTsdate_bugfix.sh &> outTsdate_bugfix
+#../../../runTsdate.sh &> outTsdate
+
+deactivate 
+
+wait; 
+
+#array=1-600
