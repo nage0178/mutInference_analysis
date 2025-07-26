@@ -11,18 +11,6 @@ do
 		# loop for loci
 		for locus in {1..510}
 		do
-			# These programs are all by loci
-			# Prepare argweaver files
-			# Argweaver can use fasta file
-			
-			# Prepare GEVA files
-			# Need to prepare vcf file
-
-			# Prepare tsdate/tsinfer
-			# Make vcf file, convert to vcf zarr
-
-			# Prepare relate
-			# looks like you can extract from vcf with their script
 
 			# prepare bpp files
 
@@ -63,6 +51,8 @@ do
 									count=$(grep -v ">" seq${tree}.fa | awk -v k=$site  '{ print substr( $0, k, 1 ) }'  | sort | uniq -c )
 									base1=$(echo $count | awk '{print $1}')
 									base2=$(echo $count | awk '{print $3}')
+									
+									# Determine which base has the higher frequency, this is used for programs that require knowing the ancestral state
 									echo $count
 									if [ "$base1" -gt "$base2" ]; then
 										anc=$(echo $count | awk '{print $2}')
@@ -73,6 +63,8 @@ do
 									((alignSite=start+site))
 									((finalStart=alignSite-2500))
 									 ((finalEnd=alignSite+2499))
+
+									# Ancestral is the inferred ancestral, not necessarily the true ancestral
 									echo Recomb $recomb Rep $rep Locus $locus Start $start Site $site finalSite $alignSite $finalStart $finalEnd Ancestral $anc > siteInfo
 									grep -E "\sSite:\s$site," mut_${tree}.txt > mutInfo
 									breakLine=1
