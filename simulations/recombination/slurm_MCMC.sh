@@ -6,7 +6,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --array=61-120
+#SBATCH --array=1-120
 #SBATCH --cpus-per-task=16
 #SBATCH --time=32-0:00:00
 #SBATCH --output=log/%A.%a.out
