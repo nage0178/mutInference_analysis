@@ -52,22 +52,21 @@ mut5000 <- mutance[which(mutance$length ==5000), ]
 
 tsdate <- read.csv("~/mutInference_analysis/simulations/recombination/tsdate_results.txt")
 aw <- read.csv("~/mutInference_analysis/simulations/recombination/arg_results.txt")
-
 bias <- c(mean((relate$lower + relate$upper)/2 - relate$generations), 
           mean(tsdate$mean - tsdate$generations), 
           mean(aw$mean - aw$generations),
           mean((bpp$mean_time  - bpp$time)/(2.0 * 10^-8), na.rm =TRUE),
-          mean((bpp1$mean_time  - bpp1$time)/(2.0 * 10^-8)),
-          mean((bpp2$mean_time  - bpp2$time)/(2.0 * 10^-8), na.rm =TRUE),
-          mean((mutance$mean_time  - mutance$time)/(2.0 * 10^-8))
+          mean((bpp1$mean_time - bpp1$time)/(2.0 * 10^-8)),
+          mean((bpp2$mean_time - bpp2$time)/(2.0 * 10^-8), na.rm =TRUE),
+          mean((mut5000$mean_time  - mut5000$time)/(2.0 * 10^-8))
 )
 RMSE <- c(sqrt(mean(((relate$lower + relate$upper)/2 - relate$generations)^2)),
-         sqrt(mean((tsdate$mean - tsdate$generations)^2)),
-         sqrt(mean((aw$mean - aw$generations)^2)),
-         sqrt(mean(((bpp$mean_time - bpp$time)/(2.0 * 10^-8))^2,  na.rm =TRUE)),
-         sqrt(mean(((bpp1$mean_time - bpp1$time)/(2.0 * 10^-8))^2)),
-         sqrt(mean(((bpp2$mean_time - bpp2$time)/(2.0 * 10^-8))^2,  na.rm =TRUE)),
-         sqrt(mean(((mut5000$mean_time - mut5000$time)/(2.0 * 10^-8))^2))
+         sqrt(mean((tsdate$mean                      - tsdate$generations)^2)),
+         sqrt(mean((aw$mean                          -     aw$generations)^2)),
+         sqrt(mean(((bpp$mean_time - bpp$time)/(2.0 * 10^-8)             )^2,  na.rm =TRUE)),
+         sqrt(mean(((bpp1$mean_time - bpp1$time)/(2.0 * 10^-8)           )^2)),
+         sqrt(mean(((bpp2$mean_time - bpp2$time)/(2.0 * 10^-8)           )^2,  na.rm =TRUE)),
+         sqrt(mean(((mut5000$mean_time - mut5000$time)/(2.0 * 10^-8)     )^2))
 )
 
 coverage <- c(mean((relate$lower < relate$generations) * (relate$generations < relate$upper)),
@@ -197,7 +196,7 @@ allScatter <- ggplot(results, aes(x=true, y= estimated )) +
 pdf("~/mutationSim/figs/all_methods_scatter.pdf", width=8, height = 4)
 ggarrange(allScatter, labels = c("a"))
 dev.off()
-  
+
 noRecomb <- read.table("~/mutInference_analysis/simulations/locusLength/mut_table.txt")
 noRecomb <- cbind("zero", noRecomb)
 colnames(noRecomb) <- colnames(bpp)[c(1,2,3,16)]
